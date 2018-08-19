@@ -2,11 +2,13 @@ param (
 	[string]$computerName,
 	[string]$state,	
 	[string]$webRoot,
+	[string]$websiteName,
 	[string]$offlineFileName,
 	[string]$onlineFileName,
 	[string]$throwFailure,
 	[string]$delayBefore,
-	[string]$delayAfter
+	[string]$delayAfter,
+	[string]$mode
 )
 
 Function PathExists($computerName, $path) {
@@ -52,8 +54,23 @@ if (-not($delayBefore -eq "" -or $delayBefore -eq "0")) {
 	Start-Sleep -s $seconds
 }
 
-$offlineHtml = Join-Path $webRoot $offlineFileName
-$onlineHtml = Join-Path $webRoot $onlineFileName
+switch ($mode) {
+	"IIS" {
+		if ($webRoot -eq "" -and -not($websiteName -eq ""))
+		{
+			$iisWebsite = Get-Website -Name $websiteName
+
+			$offlineHtml = Join-Path $iisWebsite.PhysicalPath $offlineFileName
+			$onlineHtml = Join-Path $iisWebsite.PhysicalPath $onlineFileName
+		}
+		break;
+	 }
+	"WEBROOT"{
+		$offlineHtml = Join-Path $webRoot $offlineFileName
+		$onlineHtml = Join-Path $webRoot $onlineFileName
+	}
+}
+
 
 $offlineExists = PathExists $computerName $offlineHtml
 $onlineExists = PathExists $computerName $onlineHtml

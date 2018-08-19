@@ -1,10 +1,10 @@
 {
 	"id": "f853a3ff-dbff-4877-9a3c-faa22596861c",
 	"name": "site-maintenance-mode",
-	"friendlyName": "IIS Website - Maintenance mode",
+	"friendlyName": "IIS Website - Maintenance Mode",
 	"description": "Put an IIS website under maintenance or online again.",
 	"author": "Jungerius IT",
-	"helpMarkDown": "If you put an app_offline.htm file in the root of your web application, IIS will shut down the application and only serve this webpage as an result. After you rename/delete the file the site will be back online.",
+	"helpMarkDown": "If you put a file named app_offline.htm in the root of your web application, IIS will shut down the application and only serve this webpage as an result. After you rename/delete the file the site will be back online.",
 	"category": "Deploy",
 	"visibility": [
 		"Release"
@@ -18,6 +18,18 @@
 	"minimumAgentVersion": "1.83.0",
 	"instanceNameFormat": "Change state of website to $(state)",
 	"inputs": [
+		{
+			"name": "mode",
+			"type": "pickList",
+			"label": "Target type",
+			"defaultValue": "IIS",
+			"required": true,
+			"helpMarkDown": "Specify if you want the task to grab the website path from IIS based on the website name, or if you want to provide the path manually.",
+			"options": {
+				"IIS": "IIS",
+				"Website Root": "WEBROOT"
+			}
+		},
 		{
 			"name": "computerName",
 			"type": "string",
